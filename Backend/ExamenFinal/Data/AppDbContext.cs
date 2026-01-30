@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Entidades;
 
-using ExamenFinal.Entidades;
+
 
 
 namespace Data
@@ -21,12 +21,12 @@ namespace Data
         // public DbSet<Joel> Joeles {get;set;}
 
         // Entidades y Modelos
-        public DbSet<Wilson> Wilson {get;set;}
+       // public DbSet<Wilson> Wilson {get;set;}
         public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
-
+        public DbSet<Bruno> Brunos { get; set; } = default!;
         public DbSet<Marcelo> Marcelo { get; set; }
 
         public DbSet<Herberth> Herberth { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Entidades;
 
 namespace Data
 {
@@ -8,7 +9,8 @@ namespace Data
         {
 
         }
-        //public DbSet<Docente> Docentes { get; set; }
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Marcelo> Marcelo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

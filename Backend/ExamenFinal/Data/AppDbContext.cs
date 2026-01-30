@@ -12,7 +12,7 @@ namespace Data
            
         }
         public DbSet<Persona> Personas {get;set;}
-
+        public DbSet<JavierAramayo> JavierAramayos {get;set;}
 
     }
 

@@ -8,8 +8,10 @@ namespace Data
         {
 
         }
+        //Entidades y Modelos AQUÍ
         //public DbSet<Docente> Docentes { get; set; }
 
+        //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -32,3 +34,4 @@ namespace Data
     }
 
 }
+

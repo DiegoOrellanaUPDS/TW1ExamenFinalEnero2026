@@ -1,7 +1,12 @@
+<<<<<<< HEAD
+﻿using Microsoft.EntityFrameworkCore;
+using TW1ExamenFinalEnero2026.Entidades;
+=======
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 ﻿using Microsoft.EntityFrameworkCore;
 using Entidades;
+>>>>>>> f317bb4e6222bbb794096311a6ffa757a3d3e52d
 
 namespace Data
 {
@@ -9,6 +14,12 @@ namespace Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+<<<<<<< HEAD
+        }
+        //Entidades y Modelos AQUÍ
+        //public DbSet<Docente> Docentes { get; set; }
+        public DbSet<Joel> Joeles { get; set; }
+=======
         // Entidades y Modelos
         public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Persona> Personas { get; set; }

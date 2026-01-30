@@ -1,11 +1,11 @@
-
+using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================
-// Cadena de conexiÃ³n
+// Cadena de conexión
 // =====================
 var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
                        ?? builder.Configuration.GetConnectionString("Connection");
@@ -42,7 +42,7 @@ builder.Services.AddDistributedMemoryCache();
 var app = builder.Build();
 
 // =====================
-// Migraciones automÃ¡ticas
+// Migraciones automáticas
 // =====================
 using (var scope = app.Services.CreateScope())
 {
@@ -64,7 +64,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
-    // Esto hace que Swagger estÃ© en la raÃ­z
+    // Esto hace que Swagger esté en la raíz
     //c.RoutePrefix = string.Empty;
 });
 app.UseCors("MyApp");

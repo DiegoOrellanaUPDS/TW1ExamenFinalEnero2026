@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Entidades;
 
 namespace Data
 {
@@ -10,8 +11,12 @@ namespace Data
         }
         //public DbSet<Docente> Docentes { get; set; }
 
+        public DbSet<Brayan> Brayans { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             base.OnModelCreating(modelBuilder);
 
             // DataTime (C#) == Date (PostreSQL)

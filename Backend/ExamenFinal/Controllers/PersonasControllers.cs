@@ -1,9 +1,9 @@
-using Data;
-using Entidades;
+using ExamenFinal.Data;
+using ExamenFinal.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Controllers
+namespace ExamenFinal.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

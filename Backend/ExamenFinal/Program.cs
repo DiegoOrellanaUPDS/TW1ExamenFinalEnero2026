@@ -1,6 +1,7 @@
 
-using Data;
+using ExamenFinal.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

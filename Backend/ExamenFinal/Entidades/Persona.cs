@@ -1,4 +1,4 @@
-namespace Entidades
+namespace ExamenFinal.Entidades
 {
     using System.ComponentModel.DataAnnotations;
 

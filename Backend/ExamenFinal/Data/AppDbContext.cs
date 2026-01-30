@@ -1,9 +1,10 @@
 
-using Entidades;
+using ExamenFinal.Entidades;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+
+namespace ExamenFinal.Data
 {
     public class AppDbContext : DbContext
     {
@@ -13,7 +14,7 @@ namespace Data
         }
         public DbSet<Persona> Personas {get;set;}
 
-
+        public DbSet<VictorCox> VictorCoxs { get; set; }
     }
 
 }

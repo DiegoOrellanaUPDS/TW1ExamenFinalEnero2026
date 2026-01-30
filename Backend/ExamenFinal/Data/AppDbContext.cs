@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TuProyecto.Entities;
+
 
 namespace Data
 {

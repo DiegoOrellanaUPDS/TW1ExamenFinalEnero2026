@@ -1,0 +1,33 @@
+services:
+  # SERVICIO API (Backend)
+  victorcox.api:
+    build:
+      context: ./Backend/ExamenFinal
+      dockerfile: Dockerfile
+    container_name: victorcox_api # <--- NOMBRE ÚNICO
+    ports:
+      - "5000:8080"
+    depends_on:
+      - victorcox.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # OJO: Ahora el Host se llama "victorcox.db" (coincide con el servicio de abajo)
+      # Y la base de datos se llama "examenfinal_db"
+      - ConnectionStrings__DefaultConnection=Host=victorcox.db;Port=5432;Database=examenfinal_db;Username=postgres;Password=postgres123
+
+  # SERVICIO BASE DE DATOS
+  victorcox.db:
+    image: postgres:16
+    container_name: victorcox_db # <--- NOMBRE ÚNICO
+    restart: always
+    environment:
+      POSTGRES_DB: examenfinal_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5433:5432"
+    volumes:
+      - victorcox_data:/var/lib/postgresql/data
+
+volumes:
+  victorcox_data:

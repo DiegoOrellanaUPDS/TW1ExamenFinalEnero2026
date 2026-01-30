@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // =====================
 // Cadena de conexi�n
+=======
+
+using ExamenFinal.Data;
+using Microsoft.EntityFrameworkCore;
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+// =====================
+// Cadena de conexión
+>>>>>>> feature/victorcox-entidad
 // =====================
 var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
                        ?? builder.Configuration.GetConnectionString("Connection");
@@ -42,7 +54,11 @@ builder.Services.AddDistributedMemoryCache();
 var app = builder.Build();
 
 // =====================
+<<<<<<< HEAD
 // Migraciones autom�ticas
+=======
+// Migraciones automáticas
+>>>>>>> feature/victorcox-entidad
 // =====================
 using (var scope = app.Services.CreateScope())
 {
@@ -64,7 +80,11 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+<<<<<<< HEAD
     // Esto hace que Swagger est� en la ra�z
+=======
+    // Esto hace que Swagger esté en la raíz
+>>>>>>> feature/victorcox-entidad
     //c.RoutePrefix = string.Empty;
 });
 app.UseCors("MyApp");
@@ -73,4 +93,8 @@ app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
 
+<<<<<<< HEAD
 app.Run();
+=======
+app.Run();
+>>>>>>> feature/victorcox-entidad

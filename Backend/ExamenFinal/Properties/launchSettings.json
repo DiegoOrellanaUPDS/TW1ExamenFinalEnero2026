@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "profiles": {
     "http": {
@@ -19,6 +20,38 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7149;http://localhost:5026"
+=======
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:2467",
+      "sslPort": 44390
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5242",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7086;http://localhost:5242",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+>>>>>>> feature/victorcox-entidad
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -27,6 +60,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+<<<<<<< HEAD
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
@@ -50,3 +84,8 @@
     }
   }
 }
+=======
+    }
+  }
+}
+>>>>>>> feature/victorcox-entidad

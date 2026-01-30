@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @ExamenFinal_HostAddress = http://localhost:5026
+=======
+@ExamenFinal_HostAddress = http://localhost:5242
+>>>>>>> feature/victorcox-entidad
 
 GET {{ExamenFinal_HostAddress}}/weatherforecast/
 Accept: application/json

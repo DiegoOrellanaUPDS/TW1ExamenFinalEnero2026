@@ -17,6 +17,7 @@ namespace Data
         // Entidades y Modelos
         public DbSet<Wilson> Wilson {get;set;}
         public DbSet<Arnold> Arnolds { get; set; }
+        public DbSet<AlejandroRivera> AlejandroRivera { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }

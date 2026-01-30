@@ -40,6 +40,9 @@ namespace Controllers
         return Ok(usuario);
         }
 
+        //Autenticacion con discord Javier Aramayo, me olvide hacer el pull request y lo subi todo directo en el merge junto con mis controladores y entidades , 
+        // ahora estoy haciendo este comentario para subir el pull request y que cumpla con la consigna de la tarea
+        //
         [HttpGet("login-JavierAramayoo")]
         public async Task<IActionResult>Login()
         {

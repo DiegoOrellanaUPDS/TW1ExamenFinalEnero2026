@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Data;      // Tu namespace de Data
-using Entidades; // Tu namespace de Entidades
+using Data;      // Ajusta a tu namespace
+using Entidades; // Ajusta a tu namespace
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -14,9 +14,9 @@ namespace Universidad.Controllers
         private readonly AppDbContext _context;
         private readonly HttpClient _http;
 
-        // 🔴 CREDENCIALES (Cámbialas por las tuyas de Google/Discord/Auth0)
-        private const string CLIENT_ID = "TU_CLIENT_ID"; 
-        private const string CLIENT_SECRET = "TU_CLIENT_SECRET";
+        // 🟢 PEGA AQUÍ TUS CREDENCIALES DE DISCORD
+        private const string CLIENT_ID = "1466790388302876722"; 
+        private const string CLIENT_SECRET = "y1-vDcqkQ3NHRxeVG4GZZS4NnNrwVEy2";
 
         public BrayanController(AppDbContext context)
         {
@@ -24,9 +24,9 @@ namespace Universidad.Controllers
             _http = new HttpClient();
         }
 
-        // ==================================================
-        // PARTE 2: OAUTH 2 - LOGIN Y CALLBACK
-        // ==================================================
+        // ==========================================
+        // PARTE 2: OAUTH CON DISCORD
+        // ==========================================
 
         [HttpGet("login")]
         public IActionResult Login()
@@ -34,12 +34,11 @@ namespace Universidad.Controllers
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var redirectUri = $"{baseUrl}/api/Brayan/callback";
 
-            // Ejemplo con Google (puedes cambiar la URL a Discord si prefieres)
-            var url = "https://accounts.google.com/o/oauth2/v2/auth" +
+            var url = "https://discord.com/api/oauth2/authorize" +
                       $"?client_id={CLIENT_ID}" +
                       $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
                       "&response_type=code" +
-                      "&scope=openid%20profile%20email";
+                      "&scope=identify%20email";
 
             return Redirect(url);
         }
@@ -50,9 +49,9 @@ namespace Universidad.Controllers
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var redirectUri = $"{baseUrl}/api/Brayan/callback";
 
-            if (string.IsNullOrEmpty(code)) return BadRequest("Código no recibido.");
+            if (string.IsNullOrEmpty(code)) return BadRequest("No hay código.");
 
-            // 1. Intercambiar código por token
+            // Intercambiar código por Token de Discord
             var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string> {
                 { "client_id", CLIENT_ID },
                 { "client_secret", CLIENT_SECRET },
@@ -61,45 +60,43 @@ namespace Universidad.Controllers
                 { "redirect_uri", redirectUri }
             });
 
-            var response = await _http.PostAsync("https://oauth2.googleapis.com/token", tokenRequest);
-            if (!response.IsSuccessStatusCode) return Unauthorized("Error en OAuth con el proveedor.");
+            var response = await _http.PostAsync("https://discord.com/api/oauth2/token", tokenRequest);
+            if (!response.IsSuccessStatusCode) return Unauthorized("Error obteniendo token de Discord.");
 
-            var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-            var accessToken = json.RootElement.GetProperty("access_token").GetString();
+            var tokenJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var accessToken = tokenJson.RootElement.GetProperty("access_token").GetString();
 
-            // 2. Obtener info del usuario logueado
+            // Obtener info del usuario de Discord para confirmar
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var userRes = await _http.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
+            var userRes = await _http.GetAsync("https://discord.com/api/users/@me");
             var userInfo = JsonDocument.Parse(await userRes.Content.ReadAsStringAsync());
 
-            var email = userInfo.RootElement.GetProperty("email").GetString();
+            var discordUser = userInfo.RootElement.GetProperty("username").GetString();
 
-            // 3. Crear o actualizar sesión en tu tabla de Entidad (puedes usar la misma de Brayan o una nueva)
-            // Para el examen, simplemente devolveremos un Token de Sesión inventado
-            var tokenSesion = Guid.NewGuid().ToString();
+            // Devolvemos un token ficticio para que el estudiante lo use en el POST
+            var sessionToken = Guid.NewGuid().ToString();
 
-            return Ok(new { 
-                mensaje = "Autenticación OAuth exitosa", 
-                tokenValido = tokenSesion, 
-                usuario = email 
+            return Ok(new {
+                mensaje = "Login con Discord exitoso",
+                token_para_el_post = sessionToken,
+                usuario_discord = discordUser
             });
         }
 
-        // ==================================================
+        // ==========================================
         // PARTE 1 & 2: POST PROTEGIDO
-        // ==================================================
-        
-        [HttpPost]
+        // ==========================================
+
+        [HttpPost("postbrayans")]
         public async Task<ActionResult<Brayan>> PostBrayan([FromHeader] string authorization, Brayan brayan)
         {
-            // VALIDACIÓN MANUAL DE OAUTH:
-            // Si el header no trae nada, lo rebotamos (esto cumple el punto de endpoint protegido)
+            // Verificamos que el header de autorización no esté vacío
+            // Esto demuestra que el endpoint está protegido.
             if (string.IsNullOrEmpty(authorization))
             {
-                return Unauthorized(new { mensaje = "Acceso denegado. Se requiere Token OAuth en el Header 'authorization'" });
+                return Unauthorized(new { mensaje = "Acceso denegado. Se requiere Token OAuth2." });
             }
 
-            // Lógica normal de guardado de la Parte 1
             _context.Brayans.Add(brayan);
             await _context.SaveChangesAsync();
             

@@ -10,9 +10,12 @@ namespace Controllers
     public class PersonasController : ControllerBase 
     {
         private readonly AppDbContext context;
+        
+
         public PersonasController(AppDbContext context)
         {
             this.context = context;
+        
         }
 
         [HttpGet]

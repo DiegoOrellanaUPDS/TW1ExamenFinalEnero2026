@@ -9,5 +9,6 @@ namespace Entidades
         public string Nombre{get;set;}=string.Empty;
         public int Edad{get;set;}
         public bool Estado{get;set;}=true;
+        public string Token{get;set;}=string.Empty;
     }
 }

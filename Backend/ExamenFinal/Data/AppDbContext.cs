@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Entidades;
 namespace Data
 {
     public class AppDbContext : DbContext
@@ -10,7 +10,8 @@ namespace Data
         }
         //Entidades y Modelos AQUÍ
         //public DbSet<Docente> Docentes { get; set; }
-
+        public DbSet<Arnold> Arnolds {get;set;}
+        public DbSet<Persona> Personas {get;set;}
         //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,4 +35,8 @@ namespace Data
     }
 
 }
+
+
+
+
 

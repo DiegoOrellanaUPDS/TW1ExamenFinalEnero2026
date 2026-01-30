@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Data;   // <--- REVISA QUE COINCIDA CON TU PROYECTO
 using Entidades; // <--- REVISA QUE COINCIDA CON TU PROYECTO
 
+
 namespace Universidad.Controllers
+
 {
     [Route("api/[controller]")]
     [ApiController]

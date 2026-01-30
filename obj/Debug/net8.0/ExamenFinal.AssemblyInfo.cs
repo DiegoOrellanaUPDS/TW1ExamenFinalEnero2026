@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ExamenFinal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ca2c3c53ebe691a5a0e73ce20801d9262584346")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7372002305b054179d4a2cb96aedd9359fa6368")]
+>>>>>>> feature/brayan-entidad
 [assembly: System.Reflection.AssemblyProductAttribute("ExamenFinal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ExamenFinal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

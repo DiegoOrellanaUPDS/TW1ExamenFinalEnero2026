@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 ﻿using Microsoft.EntityFrameworkCore;
 using Entidades;
+=======
+﻿using Entidades;
+using Microsoft.EntityFrameworkCore;
+>>>>>>> feature/brayan-entidad
 
 namespace Data
 {

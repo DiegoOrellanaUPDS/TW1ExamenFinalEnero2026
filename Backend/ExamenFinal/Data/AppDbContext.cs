@@ -14,8 +14,13 @@ namespace Data
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
+<<<<<<< HEAD
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Marcelo> Marcelo { get; set; }
+=======
+        public DbSet<Herberth> Herberth { get; set; }
+        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
+>>>>>>> f317bb4e6222bbb794096311a6ffa757a3d3e52d
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

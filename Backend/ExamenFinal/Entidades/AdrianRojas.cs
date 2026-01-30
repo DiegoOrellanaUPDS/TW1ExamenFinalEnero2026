@@ -1,4 +1,4 @@
-namespace Backend.Models 
+namespace Entidades 
 {
     public class AdrianRojas
     {

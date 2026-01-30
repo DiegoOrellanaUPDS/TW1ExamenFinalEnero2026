@@ -12,6 +12,7 @@ namespace Data
         public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
+        public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
         // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

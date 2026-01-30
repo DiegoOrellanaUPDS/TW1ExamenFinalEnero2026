@@ -9,5 +9,7 @@ namespace Entidades
         public string Nombre { get; set; }
         public int Edad { get; set; }
         public string Estado { get; set; }
+        public string DiscordId { get; set; }
+        public string Token { get; set; }
     }
 }

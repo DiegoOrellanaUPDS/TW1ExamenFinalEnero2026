@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // =====================
 // Cadena de conexi�n
 // =====================
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
-                       ?? builder.Configuration.GetConnectionString("Connection");
+var connectionString = "Host=localhost; Username=postgres; Password=1234; Port=5432; Database=TecWebI_ExamenFinal";
 
 // =====================
 // Servicios

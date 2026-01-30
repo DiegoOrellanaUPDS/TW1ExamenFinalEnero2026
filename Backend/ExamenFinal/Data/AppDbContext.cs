@@ -24,6 +24,7 @@ namespace Data
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
         public DbSet<Persona> Persona { get; set; }
         public DbSet<Marcelo> Marcelo { get; set; }
+        public DbSet<Fabricio> Fabricios { get; set; }
         public DbSet<JavierAramayo> JavierAramayos {get;set;}
         public DbSet<Herberth> Herberth { get; set; }
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }

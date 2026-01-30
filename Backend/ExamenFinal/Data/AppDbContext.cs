@@ -1,6 +1,6 @@
-using Entidades;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Entidades;
 
 namespace Data
 {
@@ -8,10 +8,12 @@ namespace Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        // Entidades y Modelos
+        public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
-        // Aquí puedes agregar más DbSet si necesitas otros modelos
-        // public DbSet<Docente> Docentes { get; set; }
+        public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
+        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

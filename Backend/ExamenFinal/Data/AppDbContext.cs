@@ -16,23 +16,19 @@ namespace Data
 
 <<<<<<< HEAD
         }
-        //Entidades y Modelos AQUÍ
+         //Entidades y Modelos AQUÍ 
         //public DbSet<Docente> Docentes { get; set; }
-        public DbSet<Joel> Joeles { get; set; }
-=======
-        // Entidades y Modelos
-        public DbSet<Arnold> Arnolds { get; set; }
-        public DbSet<Persona> Personas { get; set; }
-        public DbSet<Brandon> Brandons { get; set; }
-        public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
-<<<<<<< HEAD
-        public DbSet<Persona> Personas { get; set; }
-        public DbSet<Marcelo> Marcelo { get; set; }
-=======
-        public DbSet<Herberth> Herberth { get; set; }
-        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
->>>>>>> f317bb4e6222bbb794096311a6ffa757a3d3e52d
+        public DbSet<Entidades.Joel> Joeles { get; set; }
+        public DbSet<Entidades.Arnold> Arnolds { get; set; }
+        public DbSet<Entidades.Persona> Personas { get; set; }
+        public DbSet<Entidades.Brandon> Brandons { get; set; }
+        public DbSet<Entidades.SergioVillarrubia> SergioVillarrubias { get; set; }
+        public DbSet<Entidades.Marcelo> Marcelo { get; set; }
+        public DbSet<Entidades.Herberth> Herberth { get; set; }
+        public DbSet<Entidades.RodrigoPorcel> RodrigoPorcel { get; set; }
 
+
+        //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

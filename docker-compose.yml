@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: snaider-postgres
+    environment:
+      POSTGRES_DB: snaider_db
+      POSTGRES_USER: snaider_user
+      POSTGRES_PASSWORD: Control123+
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - snaider-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snaider_user -d snaider_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: snaider-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Connection: "Host=postgres;Port=5432;Database=snaider_db;Username=snaider_user;Password=Control123+;Pooling=true;"
+      Discord__ClientId: "1465246687399252010"
+      Discord__ClientSecret: "tWfNr2H_yXNHl0XoY_q_VSudljwOTZSD"
+      Discord__RedirectUri: "http://localhost:5026/api/auth/discord_callback_snaider"
+    ports:
+      - "5026:5026"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - snaider-network
+    restart: unless-stopped
+
+networks:
+  snaider-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

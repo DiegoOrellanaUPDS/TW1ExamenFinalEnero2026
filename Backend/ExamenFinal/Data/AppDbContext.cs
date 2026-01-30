@@ -1,5 +1,6 @@
 
 using Entidades;
+using ExamenFinal.Entidades;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,8 +13,7 @@ namespace Data
            
         }
         public DbSet<Persona> Personas {get;set;}
-
-
+        public DbSet<Wilson>Wilson {get;set;}
     }
 
 }

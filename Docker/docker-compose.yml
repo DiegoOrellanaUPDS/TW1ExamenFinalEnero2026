@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  examenfinal.api:
+    build:
+      context: ..
+      dockerfile: Docker/dockerfile
+    container_name: examenfinal_api
+    ports:
+      - "5026:5026"
+    depends_on:
+      - examenfinal.db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: >
+        Host=examenfinal.db;
+        Port=5432;
+        Database=examenfinal;
+        Username=postgres;
+        Password=postgres123
+
+  examenfinal.db:
+    image: postgres:16
+    container_name: examenfinal_db
+    restart: always
+    environment:
+      POSTGRES_DB: examenfinal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5434:5432"
+    volumes:
+      - examenfinal_data:/var/lib/postgresql/data
+
+volumes:
+  examenfinal_data:

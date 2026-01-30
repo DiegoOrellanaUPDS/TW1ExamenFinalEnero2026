@@ -16,6 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ca2c3c53ebe691a5a0e73ce20801d9262584346")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7372002305b054179d4a2cb96aedd9359fa6368")]
@@ -23,6 +24,9 @@ using System.Reflection;
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33dbb35455e17b989304cb41ce3e16b4b49ce17e")]
 >>>>>>> feature/brayan-oauth
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+803c296562648d970fc6200211aaa6853bb18bf3")]
+>>>>>>> feature/brayan-docker
 [assembly: System.Reflection.AssemblyProductAttribute("ExamenFinal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ExamenFinal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

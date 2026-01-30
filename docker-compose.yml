@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Contenedor de la API .NET
+  app:
+    build: .
+    ports:
+      - "5000:8080"
+    environment:
+      # MUY IMPORTANTE: El Host debe ser 'db' (el nombre del servicio de abajo)
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=proyectodb;Username=postgres;Password=brayanpass
+    depends_on:
+      - db
+
+  # Contenedor de la Base de Datos PostgreSQL
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: fox
+      POSTGRES_DB: proyectodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

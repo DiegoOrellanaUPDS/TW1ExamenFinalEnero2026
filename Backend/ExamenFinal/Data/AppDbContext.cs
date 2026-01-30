@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Entidades;
 
 namespace Data
 {
@@ -8,30 +9,35 @@ namespace Data
         {
 
         }
-        //Entidades y Modelos AQUÍ
-        //public DbSet<Docente> Docentes { get; set; }
 
-        //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
+        // ============================
+        // Entidades y Modelos AQUÍ
+        // ============================
+
+        // EXISTENTE
+        public DbSet<Persona> Personas { get; set; }
+
+        // TU ENTIDAD DEL EXAMEN
+        public DbSet<Gerson> Gersones { get; set; }
+
+        // ============================
+        // NO BORRAR, COMPATIBILIDAD DateTime con Postgres
+        // ============================
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // DataTime (C#) == Date (PostreSQL)
-            // Recorre todas las entidades y propiedades DateTime
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties())
                 {
-                    // Si la propiedad es DateTime o DateTime?
                     if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                     {
-                        property.SetColumnType("date"); // Se guarda como "date" en PostgreSQL
+                        property.SetColumnType("date");
                     }
                 }
             }
         }
-
     }
-
 }
-

@@ -486,6 +486,7 @@ $RECYCLE.BIN/
 /Backend/ExamenFinal/Migrations
 /Backend/ExamenFinal/appsettings.json
 
-/Composed.yml
+/Compose.yml
+/compose.yml
 /Backend/ExamenFinal/dockerfile
 /Backend/ExamenFinal/Dockerfile

@@ -14,6 +14,8 @@ var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
 // =====================
 // Servicios
 // =====================
+
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString, npgsqlOptions =>
     {
@@ -30,12 +32,21 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHttpClient(); // Para poder llamar a Discord
+builder.Services.AddDistributedMemoryCache(); // Para guardar la sesión en RAM
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient();
-builder.Services.AddSession();
-builder.Services.AddDistributedMemoryCache();
+// builder.Services.AddHttpClient(); // Removed duplicate
+// builder.Services.AddSession(); // Removed duplicate
+// builder.Services.AddDistributedMemoryCache(); // Removed duplicate
 
 // =====================
 // App
@@ -70,8 +81,15 @@ app.UseSwaggerUI(c =>
 });
 app.UseCors("MyApp");
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
+// pp.UseSession(); // Removed incorrect line
+// app.UseAuthentication(); // Removed duplicate
+// app.UseAuthorization(); // Removed duplicate
 
+app.MapControllers();
 app.Run();
+
+

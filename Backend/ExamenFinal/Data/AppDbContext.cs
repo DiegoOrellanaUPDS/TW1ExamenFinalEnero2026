@@ -15,6 +15,7 @@ namespace ExamenFinal.Data
         public DbSet<Persona> Personas {get;set;}
 
         public DbSet<VictorCox> VictorCoxs { get; set; }
+        public DbSet<UsuarioVictorCox> UsuariosVictorCox { get; set; }
     }
 
 }

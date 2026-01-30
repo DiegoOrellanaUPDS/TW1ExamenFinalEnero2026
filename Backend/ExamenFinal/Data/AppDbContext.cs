@@ -1,32 +1,29 @@
-<<<<<<< HEAD
-﻿using Microsoft.EntityFrameworkCore;
-using TW1ExamenFinalEnero2026.Entidades;
-=======
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-﻿using Microsoft.EntityFrameworkCore;
 using Entidades;
->>>>>>> f317bb4e6222bbb794096311a6ffa757a3d3e52d
+using ExamenFinal.Entidades;
 
 namespace Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-<<<<<<< HEAD
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+            
         }
-         //Entidades y Modelos AQUÍ 
+
+        //Entidades y Modelos AQUÍ
         //public DbSet<Docente> Docentes { get; set; }
         public DbSet<Entidades.Joel> Joeles { get; set; }
+        public DbSet<Entidades.Wilson> Wilson { get; set; }
         public DbSet<Entidades.Arnold> Arnolds { get; set; }
         public DbSet<Entidades.Persona> Personas { get; set; }
         public DbSet<Entidades.Brandon> Brandons { get; set; }
         public DbSet<Entidades.SergioVillarrubia> SergioVillarrubias { get; set; }
         public DbSet<Entidades.Marcelo> Marcelo { get; set; }
+        public DbSet<Entidades.JavierAramayo> JavierAramayos { get; set; }
         public DbSet<Entidades.Herberth> Herberth { get; set; }
         public DbSet<Entidades.RodrigoPorcel> RodrigoPorcel { get; set; }
-
 
         //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)

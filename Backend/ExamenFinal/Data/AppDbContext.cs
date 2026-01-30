@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+
+
 using Entidades;
 using ExamenFinal.Entidades;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
@@ -25,6 +26,7 @@ namespace Data
         public DbSet<RodrigoPorcel> RodrigoPorcel { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
         public DbSet<Wilson> Wilson { get; set; }
+        public DbSet<Sebastian> Sebastians { get; set; }
 
         // NO BORRAR, compatibilidad DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +45,7 @@ namespace Data
                 }
             }
         }
+
     }
 }
 

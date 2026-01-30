@@ -488,5 +488,8 @@ $RECYCLE.BIN/
 
 /Compose.yml
 /compose.yml
+
+/docker-compose.yml
+
 /Backend/ExamenFinal/dockerfile
 /Backend/ExamenFinal/Dockerfile

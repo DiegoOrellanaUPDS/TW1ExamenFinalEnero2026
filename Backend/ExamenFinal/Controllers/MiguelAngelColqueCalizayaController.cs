@@ -1,8 +1,8 @@
 using Data;
+using Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using TuProyecto.Entities;
 
 namespace TuProyecto.Controllers
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Backend.Models;
-using Backend.Data; // Ajusta esto según el nombre de tu carpeta de datos
+using Entidades;
+using Data; // Ajusta esto según el nombre de tu carpeta de datos
 
 namespace Backend.Controllers
 {

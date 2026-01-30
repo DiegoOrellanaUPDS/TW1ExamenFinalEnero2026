@@ -25,6 +25,8 @@ namespace Data
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
         public DbSet<RodrigoPorcel> RodrigoPorcel { get; set; }
 
+        public DbSet<Brian> Brians { get; set; }
+
         //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

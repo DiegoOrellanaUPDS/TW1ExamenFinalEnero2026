@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Entidades;
 
 using ExamenFinal.Entidades;
+using Backend.Models;
 
 
 namespace Data
@@ -37,8 +38,6 @@ namespace Data
                 public DbSet<Persona> Personas { get; set; }
                 public DbSet<Brandon> Brandons { get; set; }
                 public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
-
-
                 public DbSet<Persona> Persona { get; set; }
                 public DbSet<Marcelo> Marcelo { get; set; }
                 public DbSet<JavierAramayo> JavierAramayos { get; set; }
@@ -46,6 +45,10 @@ namespace Data
 
 
 
+
+
+        // Entidades y Modelos
+	public DbSet<AdrianRojas> AdrianRojases { get; set; }
 
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
         // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas

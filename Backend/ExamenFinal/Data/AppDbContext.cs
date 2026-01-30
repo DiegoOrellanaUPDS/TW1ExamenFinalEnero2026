@@ -1,24 +1,56 @@
+<<<<<<< HEAD
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Entidades;
 
+=======
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Entidades;
+
+using ExamenFinal.Entidades;
+
+>>>>>>> c490f011073fddc290f667e618b1fa9a33e5bf3e
 
 namespace Data
 {
     public class AppDbContext : DbContext
     {
+<<<<<<< HEAD
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+=======
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+            
+        }
+
+        //Entidades y Modelos AQUÍ
+        //public DbSet<Docente> Docentes { get; set; }
+        //crea bien tu entidad joel
+        // public DbSet<Joel> Joeles {get;set;}
+
+        // Entidades y Modelos
+        public DbSet<Wilson> Wilson {get;set;}
+>>>>>>> c490f011073fddc290f667e618b1fa9a33e5bf3e
         public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
 
+<<<<<<< HEAD
         public DbSet<Persona> Persona { get; set; }
         public DbSet<Marcelo> Marcelo { get; set; }
         public DbSet<JavierAramayo> JavierAramayos {get;set;}
         public DbSet<Herberth> Herberth { get; set; }
+=======
+        public DbSet<Marcelo> Marcelo { get; set; }
+
+        public DbSet<Herberth> Herberth { get; set; }
+        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
+>>>>>>> c490f011073fddc290f667e618b1fa9a33e5bf3e
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +69,11 @@ namespace Data
             }
         }
     }
+<<<<<<< HEAD
 }
 
 
 
+=======
+}
+>>>>>>> c490f011073fddc290f667e618b1fa9a33e5bf3e

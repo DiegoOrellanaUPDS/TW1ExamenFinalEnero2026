@@ -15,9 +15,10 @@ namespace Controllers
         private readonly AppDbContext context;
         private readonly IHttpClientFactory httpClientFactory;
         
+        // Configuración de Discord
         private readonly string DiscordClientId = "1465246687399252010";
         private readonly string DiscordClientSecret = "tWfNr2H_yXNHl0XoY_q_VSudljwOTZSD";
-        private readonly string DiscordRedirectUri = "http://localhost:5024/api/auth/discord_callback_snaider";
+        private readonly string DiscordRedirectUri = "http://localhost:5026/api/auth/discord_callback_snaider";
         private const string DiscordAuthUrl = "https://discord.com/api/oauth2/authorize";
         private const string DiscordTokenUrl = "https://discord.com/api/oauth2/token";
         private const string DiscordUserUrl = "https://discord.com/api/users/@me";
@@ -29,181 +30,114 @@ namespace Controllers
         }
         
         // GET: api/auth/discord_login_snaider
+        // Solo redirige a Discord para autenticación
         [HttpGet("discord_login_snaider")]
-        public IActionResult DiscordLoginSnaider([FromQuery] int? ci = null)
+        public IActionResult DiscordLoginSnaider()
         {
             var state = Guid.NewGuid().ToString();
             
+            // Guardar state en session por seguridad
             HttpContext.Session.SetString("oauth_state_snaider", state);
-            if (ci.HasValue)
-            {
-                HttpContext.Session.SetInt32("oauth_ci_snaider", ci.Value);
-            }
             
             var authUrl = $"{DiscordAuthUrl}?" +
                          $"client_id={DiscordClientId}" +
                          $"&redirect_uri={Uri.EscapeDataString(DiscordRedirectUri)}" +
                          $"&response_type=code" +
                          $"&scope=identify%20email" +
-                         $"&state={state}" +
-                         $"&prompt=consent";
+                         $"&state={state}";
             
-            return Redirect(authUrl);
+            return Ok(new { 
+                success = true, 
+                authUrl = authUrl,
+                message = "Usa esta URL para autenticarte con Discord" 
+            });
         }
         
         // GET: api/auth/discord_callback_snaider
+        // Callback simple: verifica login y genera token
         [HttpGet("discord_callback_snaider")]
         public async Task<IActionResult> DiscordCallbackSnaider([FromQuery] string code, [FromQuery] string state)
         {
-            var storedState = HttpContext.Session.GetString("oauth_state_snaider");
-            if (state != storedState)
-                return BadRequest("State inválido");
-            
-            var tokenResponse = await ExchangeCodeForTokenSnaider(code);
-            if (tokenResponse == null)
-                return BadRequest("Error obteniendo token de Discord");
-            
-            var discordUser = await GetDiscordUserInfoSnaider(tokenResponse.AccessToken);
-            if (discordUser == null)
-                return BadRequest("Error obteniendo información de usuario");
-            
-            var ci = HttpContext.Session.GetInt32("oauth_ci_snaider");
-            
-            if (ci.HasValue)
+            try
             {
-                return await LinkDiscordToExistingUserSnaider(ci.Value, discordUser, tokenResponse);
-            }
-            else
-            {
-                var existingUser = await context.Snaiders
-                    .FirstOrDefaultAsync(s => s.DiscordId == discordUser.Id && s.Estado != "Borrado");
+                // Validar state
+                var storedState = HttpContext.Session.GetString("oauth_state_snaider");
+                if (state != storedState)
+                    return BadRequest(new { success = false, message = "State inválido" });
                 
-                if (existingUser != null)
-                {
-                    return await UpdateDiscordInfoSnaider(existingUser, discordUser, tokenResponse);
-                }
-                else
-                {
-                    return Ok(new {
-                        message = "No tienes una cuenta registrada. Por favor regístrate primero.",
-                        discordInfo = new {
-                            id = discordUser.Id,
-                            username = discordUser.Username,
-                            email = discordUser.Email,
-                            discriminator = discordUser.Discriminator
-                        },
-                        registerUrl = "/api/snaider/create_snaider"
-                    });
-                }
+                // 1. Obtener token de acceso de Discord
+                var tokenResponse = await GetDiscordToken(code);
+                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.access_token))
+                    return BadRequest(new { success = false, message = "Error con Discord OAuth" });
+                
+                // 2. Obtener información básica del usuario
+                var discordUser = await GetDiscordUserInfo(tokenResponse.access_token);
+                if (discordUser == null)
+                    return BadRequest(new { success = false, message = "Error obteniendo información de Discord" });
+                
+                // 3. Generar token simple para nuestra app
+                var appToken = GenerateSimpleToken(discordUser.id);
+                
+                // 4. Opcional: Guardar/actualizar usuario en nuestra DB
+                await SaveOrUpdateUser(discordUser, tokenResponse);
+                
+                // 5. Limpiar session
+                HttpContext.Session.Remove("oauth_state_snaider");
+                
+                return Ok(new {
+                    success = true,
+                    message = "Autenticación exitosa",
+                    token = appToken,  // Token para nuestra app
+                    user = new {
+                        discordId = discordUser.id,
+                        username = $"{discordUser.username}#{discordUser.discriminator}",
+                        email = discordUser.email,
+                        avatar = discordUser.avatar
+                    },
+                    expiresIn = 3600 // 1 hora en segundos
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { 
+                    success = false, 
+                    message = "Error interno",
+                    error = ex.Message 
+                });
             }
         }
         
-        private async Task<IActionResult> LinkDiscordToExistingUserSnaider(int ci, DiscordUserInfoSnaider discordUser, DiscordTokenResponseSnaider tokenResponse)
+        // POST: api/auth/verify_token_snaider
+        // Verifica si un token es válido (solo para verificación)
+        [HttpPost("verify_token_snaider")]
+        public IActionResult VerifyTokenSnaider([FromBody] VerifyTokenRequest request)
         {
-            var snaider = await context.Snaiders
-                .FirstOrDefaultAsync(s => s.Ci == ci && s.Estado != "Borrado");
+            if (string.IsNullOrEmpty(request?.Token))
+                return BadRequest(new { success = false, message = "Token requerido" });
             
-            if (snaider == null)
-                return NotFound($"No se encontró usuario con CI: {ci}");
-            
-            var discordInUse = await context.Snaiders
-                .AnyAsync(s => s.DiscordId == discordUser.Id && s.Id != snaider.Id && s.Estado != "Borrado");
-            
-            if (discordInUse)
-                return BadRequest("Esta cuenta de Discord ya está vinculada a otro usuario");
-            
-            snaider.DiscordId = discordUser.Id;
-            snaider.DiscordUsername = $"{discordUser.Username}#{discordUser.Discriminator}";
-            snaider.DiscordEmail = discordUser.Email;
-            snaider.DiscordToken = tokenResponse.AccessToken;
-            snaider.DiscordRefreshToken = tokenResponse.RefreshToken;
-            snaider.DiscordTokenExpiry = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn);
-            
-            await context.SaveChangesAsync();
-            
-            HttpContext.Session.Remove("oauth_state_snaider");
-            HttpContext.Session.Remove("oauth_ci_snaider");
-            
-            return Ok(new {
-                message = "Cuenta de Discord vinculada exitosamente",
-                user = new {
-                    id = snaider.Id,
-                    ci = snaider.Ci,
-                    nombre = snaider.Nombre,
-                    edad = snaider.Edad,
-                    discordUsername = snaider.DiscordUsername
-                },
-                token = GenerateJwtTokenSnaider(snaider.Id.ToString())
-            });
+            try
+            {
+                var isValid = VerifySimpleToken(request.Token);
+                
+                return Ok(new {
+                    success = true,
+                    valid = isValid,
+                    message = isValid ? "Token válido" : "Token inválido o expirado"
+                });
+            }
+            catch
+            {
+                return Ok(new {
+                    success = true,
+                    valid = false,
+                    message = "Token inválido"
+                });
+            }
         }
         
-        private async Task<IActionResult> UpdateDiscordInfoSnaider(Snaider snaider, DiscordUserInfoSnaider discordUser, DiscordTokenResponseSnaider tokenResponse)
-        {
-            snaider.DiscordUsername = $"{discordUser.Username}#{discordUser.Discriminator}";
-            snaider.DiscordEmail = discordUser.Email;
-            snaider.DiscordToken = tokenResponse.AccessToken;
-            snaider.DiscordRefreshToken = tokenResponse.RefreshToken;
-            snaider.DiscordTokenExpiry = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn);
-            
-            await context.SaveChangesAsync();
-            
-            return Ok(new {
-                message = "Sesión iniciada con Discord",
-                user = new {
-                    id = snaider.Id,
-                    ci = snaider.Ci,
-                    nombre = snaider.Nombre,
-                    edad = snaider.Edad,
-                    discordUsername = snaider.DiscordUsername
-                },
-                token = GenerateJwtTokenSnaider(snaider.Id.ToString())
-            });
-        }
+        // Métodos auxiliares privados
         
-        // POST: api/auth/unlink_discord_snaider/{ci}
-        [HttpPost("unlink_discord_snaider/{ci}")]
-        public async Task<IActionResult> UnlinkDiscordSnaider(int ci)
-        {
-            var snaider = await context.Snaiders
-                .FirstOrDefaultAsync(s => s.Ci == ci && s.Estado != "Borrado");
-            
-            if (snaider == null)
-                return NotFound("Usuario no encontrado");
-            
-            snaider.DiscordId = null;
-            snaider.DiscordUsername = null;
-            snaider.DiscordEmail = null;
-            snaider.DiscordToken = null;
-            snaider.DiscordRefreshToken = null;
-            snaider.DiscordTokenExpiry = null;
-            
-            await context.SaveChangesAsync();
-            
-            return Ok(new {
-                message = "Cuenta de Discord desvinculada exitosamente",
-                user = new {
-                    id = snaider.Id,
-                    ci = snaider.Ci,
-                    nombre = snaider.Nombre
-                }
-            });
-        }
-        
-        // GET: api/auth/me_snaider
-        [HttpGet("me_snaider")]
-        public async Task<IActionResult> GetCurrentUserSnaider()
-        {
-            var authHeader = Request.Headers["Authorization"].ToString();
-            
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-                return Unauthorized();
-            
-            return Ok(new {
-                message = "Endpoint protegido - Aquí iría la información del usuario Snaider"
-            });
-        }
-        
-        private async Task<DiscordTokenResponseSnaider?> ExchangeCodeForTokenSnaider(string code)
+        private async Task<DiscordTokenResponse> GetDiscordToken(string code)
         {
             var client = httpClientFactory.CreateClient();
             
@@ -224,18 +158,13 @@ namespace Controllers
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<DiscordTokenResponseSnaider>(json);
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error obteniendo token: {error}");
+                return JsonSerializer.Deserialize<DiscordTokenResponse>(json);
             }
             
             return null;
         }
         
-        private async Task<DiscordUserInfoSnaider?> GetDiscordUserInfoSnaider(string accessToken)
+        private async Task<DiscordUserInfo> GetDiscordUserInfo(string accessToken)
         {
             var client = httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -245,55 +174,112 @@ namespace Controllers
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<DiscordUserInfoSnaider>(json);
+                return JsonSerializer.Deserialize<DiscordUserInfo>(json);
             }
             
             return null;
         }
         
-        private string GenerateJwtTokenSnaider(string userId)
+        private string GenerateSimpleToken(string discordId)
         {
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{userId}:{DateTime.UtcNow.Ticks}"));
+            // Token simple: discordId + timestamp + random
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var random = new Random().Next(1000, 9999);
+            var tokenData = $"{discordId}|{timestamp}|{random}";
+            
+            // En Base64 para que se vea como token
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(tokenData));
         }
         
-        // Clases para deserialización (con extensión _snaider)
-        public class DiscordTokenResponseSnaider
+        private bool VerifySimpleToken(string token)
         {
-            [JsonPropertyName("access_token")]
-            public string AccessToken { get; set; }
-            
-            [JsonPropertyName("token_type")]
-            public string TokenType { get; set; }
-            
-            [JsonPropertyName("expires_in")]
-            public int ExpiresIn { get; set; }
-            
-            [JsonPropertyName("refresh_token")]
-            public string RefreshToken { get; set; }
-            
-            [JsonPropertyName("scope")]
-            public string Scope { get; set; }
+            try
+            {
+                var decoded = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(token));
+                var parts = decoded.Split('|');
+                
+                if (parts.Length != 3)
+                    return false;
+                
+                // Verificar timestamp (token válido por 24 horas)
+                var timestamp = long.Parse(parts[1]);
+                var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                var maxAge = 24 * 60 * 60; // 24 horas en segundos
+                
+                return (now - timestamp) < maxAge;
+            }
+            catch
+            {
+                return false;
+            }
         }
         
-        public class DiscordUserInfoSnaider
+        private async Task SaveOrUpdateUser(DiscordUserInfo discordUser, DiscordTokenResponse tokenResponse)
         {
-            [JsonPropertyName("id")]
-            public string Id { get; set; }
-            
-            [JsonPropertyName("username")]
-            public string Username { get; set; }
-            
-            [JsonPropertyName("discriminator")]
-            public string Discriminator { get; set; }
-            
-            [JsonPropertyName("email")]
-            public string Email { get; set; }
-            
-            [JsonPropertyName("verified")]
-            public bool Verified { get; set; }
-            
-            [JsonPropertyName("avatar")]
-            public string Avatar { get; set; }
+            try
+            {
+                var existingUser = await context.Snaiders
+                    .FirstOrDefaultAsync(s => s.DiscordId == discordUser.id);
+                
+                if (existingUser == null)
+                {
+                    // Crear nuevo usuario
+                    var newUser = new Snaider
+                    {
+                        DiscordId = discordUser.id,
+                        DiscordUsername = $"{discordUser.username}#{discordUser.discriminator}",
+                        DiscordEmail = discordUser.email,
+                        DiscordAvatar = discordUser.avatar,
+                        DiscordVerified = discordUser.verified,
+                        Nombre = discordUser.username, // Usar username como nombre por defecto
+                        Estado = "Activo",
+                        FechaRegistro = DateTime.UtcNow,
+                        UltimoLogin = DateTime.UtcNow
+                    };
+                    
+                    await context.Snaiders.AddAsync(newUser);
+                }
+                else
+                {
+                    // Actualizar último login
+                    existingUser.UltimoLogin = DateTime.UtcNow;
+                    existingUser.DiscordUsername = $"{discordUser.username}#{discordUser.discriminator}";
+                    existingUser.DiscordAvatar = discordUser.avatar;
+                }
+                
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Solo loguear el error, no fallar la autenticación
+                Console.WriteLine($"Error guardando usuario: {ex.Message}");
+            }
+        }
+        
+        // Clases para deserialización
+        private class DiscordTokenResponse
+        {
+            public string access_token { get; set; }
+            public string token_type { get; set; }
+            public int expires_in { get; set; }
+            public string refresh_token { get; set; }
+            public string scope { get; set; }
+        }
+        
+        private class DiscordUserInfo
+        {
+            public string id { get; set; }
+            public string username { get; set; }
+            public string discriminator { get; set; }
+            public string email { get; set; }
+            public bool verified { get; set; }
+            public string avatar { get; set; }
+            public string locale { get; set; }
+        }
+        
+        public class VerifyTokenRequest
+        {
+            public string Token { get; set; }
         }
     }
 }

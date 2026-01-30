@@ -1,6 +1,14 @@
 using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Json;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authentication;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +36,49 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+// Configuración de Discord OAuth
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "Discord";
+})
+.AddCookie()
+.AddOAuth("Discord", options =>
+{
+    options.ClientId = builder.Configuration["Discord:ClientId"];
+    options.ClientSecret = builder.Configuration["Discord:ClientSecret"];
+    options.CallbackPath = new PathString("/signin-discord");
+    
+    options.AuthorizationEndpoint = "https://discord.com/api/oauth2/authorize";
+    options.TokenEndpoint = "https://discord.com/api/oauth2/token";
+    options.UserInformationEndpoint = "https://discord.com/api/users/@me";
+    
+    options.Scope.Add("identify");
+    options.Scope.Add("email");
+    
+    options.SaveTokens = true;
+        options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "username");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+    
+    options.Events = new OAuthEvents
+    {
+        OnCreatingTicket = async context =>
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
+            
+            var response = await context.Backchannel.SendAsync(request, context.HttpContext.RequestAborted);
+            var user = await response.Content.ReadFromJsonAsync<JsonElement>();
+            
+            context.RunClaimActions(user);
+        }
+    };
+
+});
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -69,6 +120,7 @@ app.UseSwaggerUI(c =>
 });
 app.UseCors("MyApp");
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapControllers();

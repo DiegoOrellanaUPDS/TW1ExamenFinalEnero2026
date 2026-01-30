@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TW1ExamenFinalEnero2026.Entidades;
 
 namespace Data
 {
@@ -10,6 +11,7 @@ namespace Data
         }
         //Entidades y Modelos AQUÍ
         //public DbSet<Docente> Docentes { get; set; }
+        public DbSet<Joel> Joeles { get; set; }
 
         //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)

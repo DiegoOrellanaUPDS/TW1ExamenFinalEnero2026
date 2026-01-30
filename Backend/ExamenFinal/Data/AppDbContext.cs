@@ -1,29 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Entidades;
+
 namespace Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        }
-        //Entidades y Modelos AQUÍ
-        //public DbSet<Docente> Docentes { get; set; }
-        public DbSet<Arnold> Arnolds {get;set;}
-        public DbSet<Persona> Personas {get;set;}
-        //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
+        // Entidades y Modelos
+        public DbSet<Arnold> Arnolds { get; set; }
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Brandon> Brandons { get; set; }
+        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // DataTime (C#) == Date (PostreSQL)
-            // Recorre todas las entidades y propiedades DateTime
+            // Recorre todas las entidades y propiedades DateTime para compatibilidad con PostgreSQL
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 foreach (var property in entityType.GetProperties())
                 {
-                    // Si la propiedad es DateTime o DateTime?
                     if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                     {
                         property.SetColumnType("date"); // Se guarda como "date" en PostgreSQL
@@ -31,12 +30,5 @@ namespace Data
                 }
             }
         }
-
     }
-
 }
-
-
-
-
-

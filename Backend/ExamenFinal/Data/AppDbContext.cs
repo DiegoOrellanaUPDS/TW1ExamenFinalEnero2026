@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.EntityFrameworkCore;
 using Entidades;
 
 namespace Data
@@ -13,7 +14,8 @@ namespace Data
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
         public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
-        // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
+        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Marcelo> Marcelo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

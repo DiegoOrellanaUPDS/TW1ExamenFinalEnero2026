@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Data;
 
-namespace Entidades
+namespace ExamenFinal.Entidades
 {
     public class AlejandroRivera
     {

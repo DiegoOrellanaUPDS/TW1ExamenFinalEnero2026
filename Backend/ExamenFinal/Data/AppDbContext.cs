@@ -1,20 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Entidades;
-using ExamenFinal.Entidades;
 
 namespace Data
 {
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-        //Entidades y Modelos AQUÍ
-        //public DbSet<Docente> Docentes { get; set; }
-        //crea bien tu entidad joel
-        // public DbSet<Joel> Joeles {get;set;}
-
-        // Entidades y Modelos
         public DbSet<Wilson> Wilson {get;set;}
         public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<AlejandroRivera> AlejandroRivera { get; set; }
@@ -26,6 +18,7 @@ namespace Data
         public DbSet<JavierAramayo> JavierAramayos {get;set;}
         public DbSet<Herberth> Herberth { get; set; }
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
+        public DbSet<Ricardo> Ricardos { get; set; }
         // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -12,6 +12,8 @@ namespace Data
            
         }
         public DbSet<Persona> Personas {get;set;}
+        public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
+
 
 
     }

@@ -10,7 +10,10 @@ namespace Data
         }
         //Entidades y Modelos AQUÍ
         //public DbSet<Docente> Docentes { get; set; }
-
+	
+	public DbSet<Entidades.RodrigoPorcel> RodrigoPorcel { get; set; }
+	public DbSet<Entidades.Persona> Personas { get; set; }
+		
         //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

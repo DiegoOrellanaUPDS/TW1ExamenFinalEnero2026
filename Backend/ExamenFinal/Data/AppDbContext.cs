@@ -26,6 +26,8 @@ namespace Data
         public DbSet<Herberth> Herberth { get; set; }
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
         // public DbSet<Docente> Docentes { get; set; } // puedes descomentar si lo necesitas
+         public DbSet<MauricioAramayo> MauricioAramayos { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Entidades;
@@ -8,25 +7,26 @@ namespace Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options) { }
 
-        //Entidades y Modelos AQUÍ
-        //public DbSet<Docente> Docentes { get; set; }
+        // Entidades
         public DbSet<AdrianRojas> AdrianRojases { get; set; }
-        public DbSet<CristhianAmador> CristhianAmadors { get; set; }
-        public DbSet<Wilson> Wilson { get; set; }
-        public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<AlejandroRivera> AlejandroRivera { get; set; }
-        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Arnold> Arnolds { get; set; }
         public DbSet<Brandon> Brandons { get; set; }
-        public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
-        public DbSet<Marcelo> Marcelo { get; set; }
-        public DbSet<JavierAramayo> JavierAramayos { get; set; }
+        public DbSet<CristhianAmador> CristhianAmadors { get; set; }
         public DbSet<Herberth> Herberth { get; set; }
         public DbSet<HoracioZenteno> HoracioZenteno { get; set; }
+        public DbSet<JavierAramayo> JavierAramayos { get; set; }
+        public DbSet<Marcelo> Marcelo { get; set; }
+        public DbSet<MiguelAngelColqueCalizaya> MiguelAngelColqueCalizaya { get; set; }
+        public DbSet<Persona> Personas { get; set; }
         public DbSet<RodrigoPorcel> RodrigoPorcel { get; set; }
+        public DbSet<SergioVillarrubia> SergioVillarrubias { get; set; }
+        public DbSet<Wilson> Wilson { get; set; }
 
-        //NO BORRAR, COMPATIBILIDAD DateTime con Postgres
+        // NO BORRAR, compatibilidad DateTime con Postgres
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,7 +35,8 @@ namespace Data
             {
                 foreach (var property in entityType.GetProperties())
                 {
-                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                    if (property.ClrType == typeof(DateTime) ||
+                        property.ClrType == typeof(DateTime?))
                     {
                         property.SetColumnType("date");
                     }
@@ -44,41 +45,4 @@ namespace Data
         }
     }
 }
-=======
-﻿using Microsoft.EntityFrameworkCore;
-using Entidades;
 
-namespace Data
-{
-    public class AppDbContext : DbContext
-    {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-
-        }
-        public DbSet<Persona> Personas { get; set; }
-        public DbSet<Marcelo> Marcelo { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // DataTime (C#) == Date (PostreSQL)
-            // Recorre todas las entidades y propiedades DateTime
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach (var property in entityType.GetProperties())
-                {
-                    // Si la propiedad es DateTime o DateTime?
-                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                    {
-                        property.SetColumnType("date"); // Se guarda como "date" en PostgreSQL
-                    }
-                }
-            }
-        }
-
-    }
-
-}
->>>>>>> feature/MarceloRomayS-oauth

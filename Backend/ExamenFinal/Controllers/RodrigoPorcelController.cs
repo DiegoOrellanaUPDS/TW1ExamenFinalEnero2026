@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Data;
 using Entidades;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Controllers
 {
@@ -38,6 +41,26 @@ namespace Controllers
             }
 
             return rodrigoPorcel;
+        }
+
+        // GET: api/RodrigoPorcel/login
+        [HttpGet("login")]
+        public IActionResult Login()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/api/rodrigoporcel/profile" };
+            return Challenge(properties, "Discord");
+        }
+
+        // GET: api/RodrigoPorcel/profile
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            
+            return Ok(new { userId, username, email, message = "Autenticado con Discord" });
         }
     }
 }

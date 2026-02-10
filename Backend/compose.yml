@@ -1,0 +1,29 @@
+services:
+  universidad.api:
+    build:
+      context: ./ExamenFinal/
+      dockerfile: Dockerfile
+    container_name: ExamenFinal_api
+    ports:
+      - "5000:8080"
+    depends_on:
+      - examenfinal.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=examenfinal.db;Port=5432;Database=examenfinal;Username=postgres;Password=postgres123
+
+  examenfinal.db:
+    image: postgres:16
+    container_name: universidad_db
+    restart: always
+    environment:
+      POSTGRES_DB: universidad
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5433:5432"
+    volumes:
+      - examenfinal_data:/var/lib/postgresql/data
+
+volumes:
+  examenfinal_data:
